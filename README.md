@@ -4,7 +4,7 @@
 
 它不是一个普通的 chatbot，而是一个结合了“多角色群聊”“长期记忆”“线程摘要”“子梦系统”的实验性 AI 对话项目。
 
-[项目效果图](./会话效果展示.png)
+<img width="1627" height="912" alt="image" src="https://github.com/user-attachments/assets/a2de7d07-3da8-4995-9084-757b98bd2f51" />
 
 ## 项目简介
 

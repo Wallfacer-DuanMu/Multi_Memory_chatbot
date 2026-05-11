@@ -1,9 +1,11 @@
-# Multi_Memory_chatbot
+<img width="1372" height="743" alt="image" src="https://github.com/user-attachments/assets/11e02bd3-325f-470d-a861-f22b2b0e6067" /># Multi_Memory_chatbot
 一个支持多角色扮演、群聊互动与长期记忆管理的智能聊天系统，可基于会话摘要自动提炼并沉淀用户关键信息。
 
 项目正在持续更新中
 
 它不是一个普通的 chatbot，而是一个结合了“多角色群聊”“长期记忆”“线程摘要”“子梦系统”的实验性 AI 对话项目。
+
+![会话效果展示](./会话效果展示.png)
 
 ## 项目简介
 

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <title>子梦宇宙</title>
+    <link rel="icon" href="./assets/avatars/humphrey.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="global-sidebar">
+        <div class="brand-block">
+          <div class="brand-mark">子</div>
+          <div>
+            <p class="eyebrow">多角色记忆交互空间</p>
+            <h1>子梦宇宙</h1>
+          </div>
+        </div>
+
+        <nav class="primary-nav" aria-label="主导航">
+          <button class="nav-tab active" data-view="chat">
+            <i class="fa-regular fa-comments"></i>
+            <span>聊天主页</span>
+          </button>
+          <button class="nav-tab" data-view="memory">
+            <i class="fa-regular fa-folder-open"></i>
+            <span>文件存储系统</span>
+          </button>
+          <button class="nav-tab" data-view="dream">
+            <i class="fa-regular fa-moon"></i>
+            <span>子梦工作台</span>
+          </button>
+        </nav>
+
+        <section class="status-panel">
+          <div class="panel-header">
+            <span>系统状态</span>
+            <span id="healthBadge" class="status-pill offline">离线</span>
+          </div>
+          <dl class="status-grid">
+            <div>
+              <dt>当前会话</dt>
+              <dd id="activeWindowName">未选择</dd>
+            </div>
+            <div>
+              <dt>线程数量</dt>
+              <dd id="windowCount">0</dd>
+            </div>
+            <div>
+              <dt>记忆索引</dt>
+              <dd id="memoryCount">0 项</dd>
+            </div>
+            <div>
+              <dt>自动子梦</dt>
+              <dd id="countdownLabel">13:42:18</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="sidebar-actions">
+          <button id="refreshAllBtn" class="secondary-btn sidebar-action-btn">
+            <i class="fa-solid fa-rotate"></i>
+            <span>刷新数据</span>
+          </button>
+        </section>
+      </aside>
+
+      <main class="workspace">
+        <section class="role-orbit" aria-label="角色管理系统">
+          <div id="roleSpotlight" class="role-spotlight role-spotlight-top">
+            <div class="role-spotlight-avatar" id="roleSpotlightAvatar">汉</div>
+            <div class="role-spotlight-copy">
+              <div class="role-spotlight-title-row">
+                <h4 id="roleSpotlightName">汉弗莱</h4>
+                <span id="roleSpotlightTag" class="role-tag">当前发言</span>
+              </div>
+              <p id="roleSpotlightPersona">请选择左侧角色头像，查看其基础介绍，并立即切换当前聊天角色。</p>
+            </div>
+          </div>
+
+          <form id="roleCreateForm" class="role-create-form collapsed">
+            <div class="role-create-grid">
+              <input id="roleNameInput" type="text" placeholder="新增角色名" maxlength="24" />
+              <label class="avatar-picker" for="roleAvatarFileInput">
+                <div class="avatar-picker-copy">
+                  <span class="avatar-picker-title">上传角色头像</span>
+                  <span id="roleAvatarFileName" class="avatar-picker-hint">未选择头像</span>
+                </div>
+                <span class="secondary-btn small avatar-picker-btn">选择图片</span>
+                <input id="roleAvatarFileInput" class="sr-only" type="file" accept="image/png,image/jpeg,image/webp,image/gif" />
+              </label>
+            </div>
+            <textarea id="rolePersonaInput" rows="4" placeholder="填写角色人设，这部分会进入 Prompt 的角色设定段落"></textarea>
+            <button type="submit" class="primary-btn role-create-btn">
+              <i class="fa-solid fa-sparkles"></i>
+              <span>创建新角色</span>
+            </button>
+          </form>
+
+          <div id="roleSettingsPanel" class="role-settings-panel collapsed">
+            <div id="roleManagerList" class="role-manager-list"></div>
+          </div>
+        </section>
+
+        <section id="view-chat" class="view-panel active">
+          <div class="chat-layout">
+            <aside class="chat-rolebar card">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Roles</p>
+                  <h3>角色列表</h3>
+                </div>
+                <div class="role-orbit-actions">
+                  <button id="toggleRoleSettingsBtn" class="secondary-btn small">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>设置</span>
+                  </button>
+                  <button id="toggleRoleComposerBtn" class="secondary-btn small">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>新增角色</span>
+                  </button>
+                </div>
+              </div>
+              <div id="roleAvatarRail" class="role-avatar-rail role-avatar-rail-vertical"></div>
+            </aside>
+
+            <section class="chat-main card">
+              <header class="chat-header">
+                <div>
+                  <p class="eyebrow">Conversation</p>
+                  <h3 id="chatTitle">请选择一个会话</h3>
+                </div>
+                <div class="chat-header-actions">
+                  <button id="renameChatBtn" class="secondary-btn small">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    <span>重命名</span>
+                  </button>
+                  <button id="deleteChatBtn" class="danger-btn small">
+                    <i class="fa-regular fa-trash-can"></i>
+                    <span>删除</span>
+                  </button>
+                </div>
+              </header>
+
+              <div id="messageList" class="message-list empty-state">
+                <div class="empty-illustration">
+                  <i class="fa-regular fa-message"></i>
+                </div>
+                <h4>从左侧选择会话，或创建一个新线程</h4>
+                <p>主页只负责对话：切换会话、查看历史、发送消息，其余能力都交给记忆与子梦系统。</p>
+              </div>
+
+              <form id="composerForm" class="composer" autocomplete="off">
+                <label class="sr-only" for="composerInput">输入消息</label>
+                <textarea id="composerInput" rows="3" placeholder="输入你想继续追问的话题……"></textarea>
+                <button id="sendBtn" type="submit" class="primary-btn send-btn">
+                  <i class="fa-solid fa-paper-plane"></i>
+                  <span>发送</span>
+                </button>
+              </form>
+              <div id="traceStatus" class="trace-status subtle-status">等待发送消息。</div>
+            </section>
+
+            <aside class="chat-threadbar card">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Threads</p>
+                  <h3>会话线程列表</h3>
+                </div>
+                <button id="newChatBtn" class="icon-btn" aria-label="新建会话">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <div id="sessionList" class="session-list" aria-live="polite"></div>
+
+            </aside>
+          </div>
+        </section>
+
+        <section id="view-memory" class="view-panel">
+          <div class="memory-layout">
+            <section class="memory-column card">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Short-term</p>
+                  <h3>短期记忆摘要区</h3>
+                </div>
+              </div>
+              <div id="summaryList" class="memory-list"></div>
+            </section>
+
+            <section class="memory-column card">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Long-term</p>
+                  <h3>长期记忆文件区</h3>
+                </div>
+              </div>
+              <div id="longTermList" class="memory-list"></div>
+            </section>
+
+            <section class="memory-column card detail-column">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Mid-term & Detail</p>
+                  <h3>中期记忆与内容详情</h3>
+                </div>
+              </div>
+              <div id="midTermList" class="memory-list compact"></div>
+              <article id="memoryDetail" class="memory-detail empty-state-inline">
+                <h4>点击左侧任一摘要或记忆文件</h4>
+                <p>这里会展示对应 JSON 内容、摘要状态、关键信息和可复制的原始文本。</p>
+              </article>
+            </section>
+          </div>
+        </section>
+
+        <section id="view-dream" class="view-panel">
+          <div class="dream-layout">
+            <aside class="dream-sidebar card">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Dream Threads</p>
+                  <h3>摘要列表</h3>
+                </div>
+              </div>
+              <div id="dreamSummaryList" class="session-list"></div>
+            </aside>
+
+            <section class="dream-main card">
+              <header class="dream-header">
+                <div>
+                  <p class="eyebrow">Autodream</p>
+                  <h3 id="dreamTitle">选择一个摘要线程</h3>
+                </div>
+                <div class="hero-actions">
+                  <button id="threadDreamBtn" class="secondary-btn small">
+                    <i class="fa-regular fa-star"></i>
+                    <span>子梦导入当前线程</span>
+                  </button>
+                  <div class="countdown-chip">
+                    <span>距下次 00:00 自动导入</span>
+                    <strong id="dreamCountdownInline">13:42:18</strong>
+                  </div>
+                </div>
+              </header>
+
+              <div class="dream-grid">
+                <article>
+                  <div class="panel-header">
+                    <h3>摘要详情</h3>
+                  </div>
+                  <div id="dreamSummaryDetail" class="json-box empty-mini">选择左侧摘要后查看详情。</div>
+                </article>
+                <article>
+                  <div class="panel-header">
+                    <h3>导入结果</h3>
+                  </div>
+                  <div id="dreamImportResult" class="json-box empty-mini">点击上方按钮后，这里会显示本次导入结果。</div>
+                </article>
+              </div>
+
+              <div class="stack-block">
+                <div class="panel-header">
+                  <h3>关联文件与记忆链路</h3>
+                </div>
+                <div id="dreamMemoryLinks" class="detail-list empty-mini">运行子梦后，这里会列出被影响的摘要文件、长期记忆文件与索引条目。</div>
+              </div>
+
+              <div class="stack-block">
+                <div class="panel-header">
+                  <h3>子梦轨迹</h3>
+                </div>
+                <div id="dreamTraceList" class="trace-list empty-mini">执行子梦后，这里会展示每一步调用和处理情况。</div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <template id="sessionItemTemplate">
+      <button class="session-item" type="button">
+        <span class="session-title"></span>
+        <span class="session-meta"></span>
+      </button>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

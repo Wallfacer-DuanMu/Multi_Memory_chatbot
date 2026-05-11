@@ -1,0 +1,11 @@
+{
+  "threads": [
+    {
+      "thread_id": "window-001",
+      "autodream_status": "pending",
+      "last_raw_turn_id": 1,
+      "last_summary_updated_at": "2026-05-11T10:24:36.8369888+08:00",
+      "last_autodream_at": "0001-01-01T00:00:00Z"
+    }
+  ]
+}

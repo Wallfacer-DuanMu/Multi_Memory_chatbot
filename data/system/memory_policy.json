@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "description": "Simple stable memory policy for Humphrey butler demo.",
+  "allowed_types": [
+    "profile",
+    "relationship",
+    "preference",
+    "opinion",
+    "event",
+    "emotion",
+    "digest",
+    "index"
+  ]
+}
